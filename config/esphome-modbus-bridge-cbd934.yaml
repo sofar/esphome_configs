@@ -110,6 +110,31 @@ sensor:
     filters:
       - lambda: return x / 60;
 
+# product info
+  - id: product_software
+    name: Software version
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x014
+    value_type: U_DWORD
+    register_type: holding
+    
+  - id: product_hardware
+    name: Hardware version
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x016
+    value_type: U_DWORD
+    register_type: holding
+
+  - id: product_serial
+    name: Serial number
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x018
+    value_type: U_DWORD
+    register_type: holding
+
 # battery sensors
   - id: battery_charge_pct
     name: Battery Percentage Charged
@@ -281,37 +306,43 @@ sensor:
     value_type: U_DWORD # 32 bits here
     register_type: holding
 
-#  - id: voltage_setting
-#    name: Voltage Configuration
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    value_type: U_WORD
-#    register_type: holding
-#    address: 0xE003
+  - id: voltage_setting
+    name: Voltage Configuration
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    value_type: U_WORD
+    register_type: holding
+    address: 0xE003
+    # need to split this into lower and higher bits, and then decompose
 
-#  - id: battery_type
-#    name: Battery Configuration
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    value_type: U_WORD
-#    register_type: holding
-#    address: 0xE004
+  - id: battery_type
+    name: Battery Configuration
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    value_type: U_WORD
+    register_type: holding
+    address: 0xE004
+    # map the resulting values out
 
-#  - id: load_mode
-#    name: Load mode Configuration
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    value_type: U_WORD
-#    register_type: holding
-#    address: 0xE01D
+  - id: load_mode
+    name: Load mode Configuration
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    value_type: U_WORD
+    register_type: holding
+    address: 0xE01D
+    # map
 
-#switch:
-#  - id: load_enable
-#    name: Enable Load Output
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x010A
-#    register_type: holding
-#    bitmask: 1
-#    entity_category: config
-#    icon: "mdi:toggle-switch"
+switch:
+  - id: load_enable
+    name: Enable Load Output
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x010A
+    register_type: holding
+    entity_category: config
+    icon: "mdi:toggle-switch"
+    # force boolean output value to modbus
+    write_lambda: |-
+      return !!x;
+
