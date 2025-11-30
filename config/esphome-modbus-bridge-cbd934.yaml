@@ -70,7 +70,7 @@ modbus_controller:
     allow_duplicate_commands: false
     command_throttle: 100ms
     setup_priority: -10
-    update_interval: 10s
+    update_interval: 30s
 
 # generic esphome device info
 text_sensor:
@@ -111,173 +111,175 @@ sensor:
       - lambda: return x / 60;
 
 # battery sensors
-#  - id: battery_charge_pct
-#    name: Battery Percentage Charged
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0100
-#    unit_of_measurement: '%'
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 0
+  - id: battery_charge_pct
+    name: Battery Percentage Charged
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0100
+    unit_of_measurement: '%'
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 0
 
-#  - id: battery_voltage
-#    name: Battery Voltage
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-##    address: 0x0101
-#    unit_of_measurement: 'V'
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: battery_voltage
+    name: Battery Voltage
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0101
+    unit_of_measurement: 'V'
+    device_class: voltage
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
 
-#  - id: battery_charge_current
-#    name: Panel to Battery Amps
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0102
-#    unit_of_measurement: 'A'
-#    device_class: current
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.01
+  - id: battery_charge_current
+    name: Panel to Battery Amps
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0102
+    unit_of_measurement: 'A'
+    device_class: current
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+## missing: capacity
 
 # Load Sensors
-#  - id: load_voltage
-#    name: Load Voltage
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0104
-#    unit_of_measurement: 'V'
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: load_voltage
+    name: Load Voltage
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0104
+    unit_of_measurement: 'V'
+    device_class: voltage
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
 
-#  - id: load_current
-#    name: Load Current
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0105
-#    unit_of_measurement: 'A'
-#    device_class: current
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.01
+  - id: load_current
+    name: Load Current
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0105
+    unit_of_measurement: 'A'
+    device_class: current
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
 
-#  - id: load_watts
-#    name: Load Power
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0106
-#    unit_of_measurement: 'W'
-#    device_class: power
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 0
+  - id: load_watts
+    name: Load Power
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0106
+    unit_of_measurement: 'W'
+    device_class: power
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 0
 
 # Solar Panel Sensors
-#  - id: panel_voltage
-#    name: Panel Voltage
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0107
-#    unit_of_measurement: 'V'
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: panel_voltage
+    name: Panel Voltage
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0107
+    unit_of_measurement: 'V'
+    device_class: voltage
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
 
-#  - id: panel_current
-#    name: Panel to Controller Current
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0108
-#    unit_of_measurement: 'A'
-#    device_class: current
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.01
+  - id: panel_current
+    name: Panel to Controller Current
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0108
+    unit_of_measurement: 'A'
+    device_class: current
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
 
-#  - id: panel_watts
-#    name: Panel Power
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x0109
-#    unit_of_measurement: 'W'
-#    device_class: power
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 0
+  - id: panel_watts
+    name: Panel Power
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x0109
+    unit_of_measurement: 'W'
+    device_class: power
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 0
 
-##  - id: battery_min_volts_day
-#    name: Battery Voltage Minium for Day
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x010B
-#    unit_of_measurement: 'V'
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: battery_min_volts_day
+    name: Battery Voltage Minium for Day
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x010B
+    unit_of_measurement: 'V'
+    device_class: voltage
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
 
-#  - id: battery_max_volts_day
-#    name: Battery Voltage Max for Day
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x010C
-#    unit_of_measurement: 'V'
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: battery_max_volts_day
+    name: Battery Voltage Max for Day
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x010C
+    unit_of_measurement: 'V'
+    device_class: voltage
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
 
-#  - id: panel_max_watts_day
-#    name: Panel Watts Max for Day
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x010F
-#    unit_of_measurement: 'W'
-#    device_class: power
-#    register_type: holding
-#    value_type: U_WORD
-#    accuracy_decimals: 2
-#    filters:
-#      - multiply: 0.1
+  - id: panel_max_watts_day
+    name: Panel Watts Max for Day
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x010F
+    unit_of_measurement: 'W'
+    device_class: power
+    register_type: holding
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.1
   
-#  - id: charging_state
-#    name: Charging State
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x120
-#    bitmask: 0xff
-#    value_type: U_WORD
-#    register_type: holding
+  - id: charging_state
+    name: Charging State
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x120
+    bitmask: 0xff
+    value_type: U_WORD
+    register_type: holding
 
-#  - id: controller_status
-#    name: Controller Status
-#    platform: modbus_controller
-#    modbus_controller_id: modbus_renogy
-#    address: 0x121
-#    value_type: U_DWORD # 32 bits here
-#    register_type: holding
+  - id: controller_status
+    name: Controller Status
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    address: 0x121
+    value_type: U_DWORD # 32 bits here
+    register_type: holding
 
 #  - id: voltage_setting
 #    name: Voltage Configuration
