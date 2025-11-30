@@ -1,18 +1,17 @@
-# esphome setup data - Most of this will be created when you add your board via the ESPHome Addon in Home Assistant
 esphome:
-  name: "esphome-modbus-bridge-cbd934" #Change this to the name you want to use
-  friendly_name: Solar Controller #Change this to the name you want to use
+  name: "esphome-modbus-bridge-cbd934"
+  friendly_name: Renogy Solar Charge Controller
 
 esp32:
   framework:
     type: esp-idf
   board: esp32dev
-  
+
 # Enable logging
 logger:
   level: DEBUG
   baud_rate: 115200
-  
+
 # Enable Home Assistant API
 api:
 
@@ -37,9 +36,9 @@ web_server:
   version: 3 # Enable the web server with the latest version 3.0
 
 captive_portal:
-  
+
 # If you want to save battery life, uncomment the following lines to put the device to sleep
-# deep_sleep: 
+# deep_sleep:
 #   id: deep_sleep_enabled
 #   run_duration: 5min
 #   sleep_duration: 55min
@@ -52,6 +51,7 @@ uart:
   parity: NONE
   tx_pin: 16
   rx_pin: 17
+  # uncomment this to debug the serial data tx >>> and rx <<< streams:
   debug:
     direction: BOTH
     after:
@@ -89,7 +89,7 @@ text_sensor:
     register_type: holding
     register_count: 8
     response_size: 16
-    
+
 sensor:
 
 # wifi sensor
@@ -118,7 +118,7 @@ sensor:
     address: 0x014
     value_type: U_DWORD
     register_type: holding
-    
+
   - id: product_hardware
     name: Hardware version
     platform: modbus_controller
@@ -288,7 +288,7 @@ sensor:
     accuracy_decimals: 2
     filters:
       - multiply: 0.1
-  
+
   - id: charging_state
     name: Charging State
     platform: modbus_controller
@@ -312,8 +312,25 @@ sensor:
     modbus_controller_id: modbus_renogy
     value_type: U_WORD
     register_type: holding
+    unit_of_measurement: 'V'
+    device_class: voltage
     address: 0xE003
-    # need to split this into lower and higher bits, and then decompose
+    # high 8 bits of register is the setting. modbus is MSB
+    lambda: |-
+      return data[0];
+
+  - id: voltage_recognized
+    name: Voltage Recognized
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    value_type: U_WORD
+    register_type: holding
+    unit_of_measurement: 'V'
+    device_class: voltage
+    address: 0xE003
+    # low 8 bits of register is the detected value
+    lambda: |-
+      return data[1];
 
   - id: battery_type
     name: Battery Configuration
@@ -345,4 +362,35 @@ switch:
     # force boolean output value to modbus
     write_lambda: |-
       return !!x;
+
+select:
+  # this seems not to work. It's according to spec, and the serial conversation
+  # confirms it with the modbus doc from renogy, but, the setting doesn't change.
+  - id: load_setting
+    name: Load Setting
+    platform: modbus_controller
+    modbus_controller_id: modbus_renogy
+    entity_category: config
+    address: 0xE01D
+    value_type: U_WORD
+    icon: "mdi:cog"
+    optionsmap:
+      "Light control": 0
+      "1h": 1
+      "2h": 2
+      "3h": 3
+      "4h": 4
+      "5h": 5
+      "6h": 6
+      "7h": 7
+      "8h": 8
+      "9h": 9
+      "10h": 10
+      "11h": 11
+      "12h": 12
+      "13h": 13
+      "14h": 14
+      "Manual": 15
+      "Debug": 16
+      "On": 17
 
