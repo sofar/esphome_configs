@@ -2,6 +2,12 @@ esphome:
   name: "esphome-modbus-bridge-cbd934"
   friendly_name: Renogy Solar Charge Controller
 
+external_components:
+  - source:
+      type: git
+      url: https://github.com/rosenrot00/esphome_modbus_bridge
+    components: [modbus_bridge]
+
 esp32:
   framework:
     type: esp-idf
@@ -45,12 +51,14 @@ captive_portal:
 
 # Modbus uart info - using tx2/rx2 to avoid interfering with standard serial logs
 uart:
+  id: uart_bus
   baud_rate: 9600
   data_bits: 8
   stop_bits: 1
   parity: NONE
   tx_pin: 16
   rx_pin: 17
+
   # uncomment this to debug the serial data tx >>> and rx <<< streams:
   debug:
     direction: BOTH
@@ -58,6 +66,40 @@ uart:
       timeout: 100ms
     sequence:
       - lambda: UARTDebug::log_hex(direction, bytes, ' ');
+
+# act as a TCP bridge over the local network
+modbus_bridge:
+  id: mb_bridge
+  uart_id: uart_bus
+  tcp_port: 502                # TCP port to listen on
+  tcp_poll_interval: 50        # ms between TCP polls
+  tcp_client_timeout: 60000    # ms of inactivity before client is disconnected
+  tcp_allowed_clients: 4       # number of simultaneous TCP clients (min 1)
+  rtu_response_timeout: 3000   # ms, internally clamped to >=10 ms
+  #flow_control_pin: GPIO18     # optional: RS-485 DE/RE pin
+
+  # Example – fires whenever the number of connected TCP clients changes
+  on_tcp_clients_changed:
+    then:
+      - lambda: |-
+          id(tcp_clients) = count;
+      - logger.log:
+          format: "TCP clients connected: %d"
+          args: ['count']
+
+  # Other available events (use similarly):
+  # on_rtu_send:       # (function_code, address) – triggered for every RTU command sent
+  # on_rtu_receive:    # (function_code, address) – triggered for every valid RTU response
+  # on_rtu_timeout:    # (function_code, address) – triggered for RTU timeouts
+  # on_tcp_started:    # () – triggered when TCP server successfully starts
+  # on_tcp_stopped:    # () – triggered when TCP server stops or IP is lost
+
+# Global variable to hold number of connected TCP clients
+globals:
+  - id: tcp_clients
+    type: int
+    restore_value: no
+    initial_value: '0'
 
 modbus:
   send_wait_time: 100ms
