@@ -1,0 +1,233 @@
+esphome:
+  # area:
+  name_add_mac_suffix: true
+  name: "coopfour-0806f8"
+  friendly_name: Chicken Coop V4
+#  project:
+#    name: coop-uter
+#    version: 4.0.0
+
+esp32:
+  framework:
+    type: esp-idf
+  board: esp32-s3-devkitc-1
+
+# Enable logging
+logger:
+  level: DEBUG
+  baud_rate: 115200
+
+# Enable Home Assistant API
+api:
+
+# ha restart button
+button:
+  - platform: restart
+    id: restart_button
+    name: "Device Restart"
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "esphome - fallback hotspot"
+
+web_server:
+  port: 80
+  version: 3 # Enable the web server with the latest version 3.0
+
+captive_portal:
+
+# If you want to save battery life, uncomment the following lines to put the device to sleep
+# deep_sleep:
+#   id: deep_sleep_enabled
+#   run_duration: 5min
+#   sleep_duration: 55min
+
+# generic esphome device info
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+
+  - platform: version
+    name: "ESPHome Version"
+
+sensor:
+# wifi sensor
+  - id: device_wifi_signal
+    name: WiFi Signal Strength
+    platform: wifi_signal
+    entity_category: diagnostic
+    update_interval: 60s
+
+# uptime sensor
+  - platform: uptime
+    name: Device Uptime
+    id: device_uptime
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    unit_of_measurement: min
+    update_interval: 60s
+    filters:
+      - lambda: return x / 60;
+
+binary_sensor:
+  - platform: status
+    name: "Status"
+
+  - platform: gpio
+    name: "Boot Button"
+    pin:
+      number: 0
+      ignore_strapping_warning: true
+      mode:
+        input: true
+      inverted: true
+    disabled_by_default: true
+    on_press:
+      then:
+        - button.press: restart_button
+
+  - platform: gpio
+    pin:
+      number: GPIO13
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: Door Opened
+    filters:
+      - delayed_on: 10ms
+    # no action - purely informational
+
+  - platform: gpio
+    pin:
+      number: GPIO14
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: Door Closed
+    filters:
+      - delayed_on: 10ms
+    # no action - purely informational
+
+  - platform: gpio
+    pin:
+      number: GPIO15
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: Open Button
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - switch.turn_on: relay1
+
+  - platform: gpio
+    pin:
+      number: GPIO16
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: Close Button
+    filters:
+      - delayed_on: 10ms
+    on_press:
+      then:
+        - switch.turn_on: relay2
+
+switch:
+  # motor fwd (open door)
+  - platform: gpio
+    pin: GPIO1
+    id: relay1
+    name: Relay 1
+    interlock: [relay2]
+    on_turn_on:
+      - delay: 45s
+      - switch.turn_off: relay1
+  # motor rev (close door)
+  - platform: gpio
+    pin: GPIO2
+    id: relay2
+    name: Relay 2
+    interlock: [relay1]
+    on_turn_on:
+      - delay: 45s
+      - switch.turn_off: relay2
+  # lamp
+  - platform: gpio
+    pin: GPIO41
+    id: relay3
+    name: Relay 3
+
+#  # unused
+#  - platform: gpio
+#    pin: GPIO42
+#    id: relay4
+#    name: Relay 4
+#  - platform: gpio
+#    pin:
+#      number: GPIO45
+#      ignore_strapping_warning: true
+#    id: relay5
+#    name: Relay 5
+#  - platform: gpio
+#    pin:
+#      number: GPIO46
+#      ignore_strapping_warning: true
+#    id: relay6
+#    name: Relay 6
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO17
+  rx_pin: GPIO18
+  baud_rate: 115200
+  data_bits: 8
+  stop_bits: 1
+  parity: NONE
+
+  # uncomment this to debug the serial data tx >>> and rx <<< streams:
+  debug:
+    direction: BOTH
+    after:
+      timeout: 100ms
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ' ');
+
+modbus:
+  send_wait_time: 100ms
+  id: modbus_epever
+
+modbus_controller:
+  - id: epever
+    address: 0x01
+    modbus_id: modbus_epever
+    allow_duplicate_commands: false
+    command_throttle: 200ms
+    setup_priority: -10
+    update_interval: 60s
+
+# buzzer
+output:
+  - platform: ledc
+    pin: GPIO21
+    id: buzzer
+
+rtttl:
+  output: buzzer
+  id: rtttl_buzzer
+  gain: 30%
+
+
+
