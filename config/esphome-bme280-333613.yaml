@@ -1,4 +1,5 @@
 esphome:
+  # location: downstairs living room
   name: "esphome-bme280-333613"
   friendly_name: "esphome-bme280-333613"
 
@@ -20,8 +21,6 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  min_auth_mode: WPA2
-
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esphome-Bme280 Fallback Hotspot"
