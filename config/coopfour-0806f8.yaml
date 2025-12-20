@@ -153,7 +153,9 @@ switch:
     name: Relay 1
     interlock: [relay2]
     on_turn_on:
+      - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
       - delay: 45s
+      - rtttl.play: 'siren:d=8,o=6,b=100:e,d'
       - switch.turn_off: relay1
   # motor rev (close door)
   - platform: gpio
@@ -162,7 +164,9 @@ switch:
     name: Relay 2
     interlock: [relay1]
     on_turn_on:
+      - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
       - delay: 45s
+      - rtttl.play: 'siren:d=8,o=6,b=100:e,d'
       - switch.turn_off: relay2
   # lamp
   - platform: gpio
@@ -230,4 +234,12 @@ rtttl:
   gain: 30%
 
 
+light:
+  - platform: esp32_rmt_led_strip
+    id: rgb_led
+    name: "RGB LED"
+    rgb_order: RGB
+    pin: GPIO38
+    num_leds: 1
+    chipset: WS2812
 
