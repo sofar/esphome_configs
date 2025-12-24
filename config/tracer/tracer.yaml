@@ -1,0 +1,47 @@
+sensor:
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: device_temperature
+    name: "Device temperature"
+    address: 0x3111
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: power_components_temperature
+    name: "Power components temperature"
+    address: 0x3112
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: battery_soc
+    name: "Battery SOC"
+    address: 0x311A
+    unit_of_measurement: "%"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: remote_battery_temperature
+    name: "Remote battery temperature"
+    address: 0x311B
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
