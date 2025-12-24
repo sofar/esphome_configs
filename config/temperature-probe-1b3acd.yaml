@@ -101,11 +101,16 @@ display: # d5/d6!
     # min/max is +125c (257F) and -55C (-67F) which all fit in the display
     # as long as we're not displaying digits.
     lambda: |-
-      if (id(temperature_unit_fahrenheit))
-        it.printf(0, "%3.0fF", id(temp).state * 1.8 + 32.0);
-      else
+      if (id(temperature_unit_fahrenheit)) {
+        auto f = id(temp).state * 1.8 + 32.0;
+        if (f < 100.0)
+          it.printf(0, "%2.1fF", f);
+        else
+          it.printf(0, "%3.0fF", f);
+      } else {
         if (id(temp).state < 100.0)
           it.printf(0, "%2.1fC", id(temp).state);
         else
           it.printf(0, "%3.0fC", id(temp).state);
+      }
 
