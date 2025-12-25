@@ -1,0 +1,41 @@
+logger:
+  level: DEBUG
+  baud_rate: 115200
+
+api:
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+captive_portal:
+
+web_server:
+  port: 80
+  version: 3
+
+button:
+  - platform: restart
+    id: device_restart
+    name: "Device Restart"
+
+text_sensor:
+  - platform: version
+    id: device_version
+    name: "ESPHome Version"
+
+sensor:
+  - platform: uptime
+    name: Uptime
+    id: device_uptime
+    entity_category: diagnostic
+    accuracy_decimals: 0
+    unit_of_measurement: min
+    update_interval: 60s
+    filters:
+      - lambda: return x / 60;
+
+binary_sensor:
+  - platform: status
+    id: device_status
+    name: "Status"
