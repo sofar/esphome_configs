@@ -1,0 +1,169 @@
+esphome:
+  name: generac-cbd934
+  friendly_name: Generator
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+packages:
+  - !include standard/basic.yaml
+  - !include standard/wifi.yaml
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+  debug:
+    direction: BOTH
+    after:
+      timeout: 100ms
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ' ');
+
+modbus:
+  send_wait_time: 100ms
+  id: modbus_generac_master
+
+modbus_controller:
+- id: modbus_generac
+  address: 0x9d   ## address of the Modbus slave device on the bus
+  modbus_id: modbus_generac_master
+  command_throttle: 100ms
+  setup_priority: -10
+  update_interval: 10s
+
+sensor:
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Battery Voltage"
+  id: generac_battery_voltage
+  address: 0x000a
+  value_type: U_WORD
+  unit_of_measurement: "V"
+  accuracy_decimals: 1
+  register_type: "holding"
+  filters:
+   - multiply: 0.1
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Utility Voltage"
+  id: generac_utility_voltage
+  address: 0x0009
+  value_type: U_WORD
+  unit_of_measurement: "V"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Hours until Service A"
+  id: generac_hours_service_A
+  address: 0x001a
+  value_type: U_WORD
+  unit_of_measurement: "Hours"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Date Service A Due"
+  id: generac_date_service_A
+  address: 0x001b
+  value_type: U_WORD
+  unit_of_measurement: "Hours"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Hours until Service B"
+  id: generac_hours_service_B
+  address: 0x001e
+  value_type: U_WORD
+  unit_of_measurement: "Hours"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Engine RPM"
+  id: generac_engine_rpm
+  address: 0x0007
+  value_type: U_WORD
+  unit_of_measurement: "RPM"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Generator Output Voltage"
+  id: generac_gen_output_voltage
+  address: 0x0012
+  value_type: U_WORD
+  unit_of_measurement: "V"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Generator Frequency"
+  id: generac_frequency
+  address: 0x0008
+  value_type: U_WORD
+  unit_of_measurement: "Hz"
+  accuracy_decimals: 0
+  register_type: "holding"
+
+text_sensor:
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Generator Switch State Hex"
+  id: generac_switch_state_hex
+  address: 0x0001
+  raw_encode: HEXBYTES
+  register_type: "holding"
+
+- platform: modbus_controller
+  modbus_controller_id: modbus_generac
+  name: "Generator Engine State Hex"
+  id: generac_engine_state_hex
+  address: 0x0002
+  raw_encode: HEXBYTES
+  register_type: "holding"
+
+- platform: template
+  name: "Generator Engine State"
+  id: generator_engine_state
+  update_interval: 10s
+  lambda: |-
+    auto switch_state = id(generac_switch_state_hex).state;
+    auto engine_state = id(generac_engine_state_hex).state;
+    return switch_state + engine_state;
+  filters:
+    - map:
+      - 00000000 -> Ready
+      - 00040000 -> Exercising
+      - 00090000 -> Not Running
+      - 00090007 -> Not Running
+      - 00010000 -> Startup Delay Timer Activated
+      - 00020000 -> Cranking
+      - 00030000 -> Running
+      - 00050000 -> Cooling Down
+
+- platform: template
+  name: "Generator Switch State"
+  id: generator_switch_state
+  update_interval: 10s
+  lambda: |-
+    auto switch_state = id(generac_switch_state_hex).state;
+    return switch_state;
+  filters:
+    - map:
+      - 0000 -> Auto
+      - 0004 -> Auto
+      - 0009 -> Off
+      - 0003 -> Manual
