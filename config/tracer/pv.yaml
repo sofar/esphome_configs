@@ -1,3 +1,4 @@
+
 sensor:
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -9,6 +10,35 @@ sensor:
     register_type: read
     value_type: U_WORD
     accuracy_decimals: 1
+    lambda: |-
+      int i;
+      float sumpre, avgpre = 0.0;
+      float sumpost, avgpost = 0.0;
+      auto pv = id(pv_history);
+
+      // calc average before
+      for (i = 0; i < 7; i++)
+        sumpre += pv[i];
+      avgpre = sumpre / 8.0;
+
+      // insert new measurement
+      for (i = 1; i < 7; i++)
+        pv[i] = pv[i-1];
+      pv[7] = x;
+
+      // calc average after
+      for (i = 0; i < 7; i++)
+        sumpost += pv[i];
+      avgpost = sumpost / 8.0;
+
+      // publish changes to template sensor
+      if ((avgpre < 5.0) && (avgpost >= 5.0))
+        id(day_night_mode).publish_state("day");
+
+      if ((avgpre >= 5.0) && (avgpost < 5.0))
+        id(day_night_mode).publish_state("night");
+
+      return x;
     filters:
         - multiply: 0.01
 

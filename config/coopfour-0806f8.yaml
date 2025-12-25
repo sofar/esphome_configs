@@ -75,6 +75,9 @@ binary_sensor:
     on_press:
       then:
         - switch.turn_on: relay1
+    on_release:
+      then:
+        - switch.turn_off: relay1
 
   - platform: gpio
     pin:
@@ -89,6 +92,9 @@ binary_sensor:
     on_press:
       then:
         - switch.turn_on: relay2
+    on_release:
+      then:
+        - switch.turn_off: relay2
 
 switch:
   # motor fwd (open door)
@@ -98,9 +104,9 @@ switch:
     name: Relay 1
     interlock: [relay2]
     on_turn_on:
-      - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
-      - delay: 45s
-      - rtttl.play: 'siren:d=8,o=6,b=100:e,d'
+      - rtttl.play: 'alert:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
+      - delay: 120s
+      - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
       - switch.turn_off: relay1
 
   # motor rev (close door)
@@ -110,9 +116,9 @@ switch:
     name: Relay 2
     interlock: [relay1]
     on_turn_on:
-      - rtttl.play: 'siren:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
-      - delay: 45s
-      - rtttl.play: 'siren:d=8,o=6,b=100:e,d'
+      - rtttl.play: 'alert:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
+      - delay: 120s
+      - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
       - switch.turn_off: relay2
 
   # lamp
@@ -188,3 +194,41 @@ light:
     pin: GPIO38
     num_leds: 1
     chipset: WS2812
+
+globals:
+  - id: pv_history
+    type: float[8]
+    initial_value: '{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}'
+
+text_sensor:
+  # The tracer/pv.yaml file has a lambda in the panel_voltage sensor
+  # that publishes to this template sensor, and keeps the above pv_history
+  # array updated with values. This template text_sensor then translates
+  # changes in it to open/close events.
+  # because the initial state will be unknown, after a fresh boot this will
+  # automatically run the open or close sequence a few minutes after being
+  # powered on.
+  - platform: template
+    name: "Day/Night"
+    id: day_night_mode
+    on_value:
+      - if:
+          condition:
+            lambda: 'return id(day_night_mode).state == "day";'
+          then:
+            - rtttl.play: 'alert:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
+            - switch.turn_on: relay1
+            - delay: 120s
+            - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
+            - switch.turn_off: relay1
+      - if:
+          condition:
+            lambda: 'return id(day_night_mode).state == "night";'
+          then:
+            - rtttl.play: 'alert:d=8,o=5,b=100:e,d,e,d,e,d,e,d'
+            - switch.turn_on: relay3
+            - delay: 600s
+            - switch.turn_on: relay2
+            - delay: 120s
+            - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
+            - switch.turn_off: relay2
