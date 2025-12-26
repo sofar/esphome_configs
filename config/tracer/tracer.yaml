@@ -5,7 +5,7 @@ sensor:
     name: "Device night mode"
     address: 0x200c
     register_type: discrete_input
-    value_type: S_WORD
+    response_size: 1
 
   - platform: modbus_controller
     modbus_controller_id: epever
