@@ -7,6 +7,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
@@ -19,6 +20,7 @@ sensor:
     unit_of_measurement: "A"
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
@@ -31,6 +33,7 @@ sensor:
     unit_of_measurement: "W"
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
@@ -109,7 +112,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: epever
-    id: Battery_status_volt
+    id: battery_status_volt
     name: "Battery status - Voltage"
     address: 0x3200
     register_type: read
@@ -119,7 +122,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: epever
-    id: Battery_status_temp
+    id: battery_status_temp
     name: "Battery status - Temperature"
     address: 0x3200
     register_type: read

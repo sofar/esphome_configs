@@ -24,7 +24,6 @@ packages:
   tracer-rtc: !include tracer/rtc.yaml
 
 binary_sensor:
-
   - platform: gpio
     name: "Boot Button"
     pin:
@@ -197,8 +196,8 @@ light:
 
 globals:
   - id: pv_history
-    type: float[8]
-    initial_value: '{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}'
+    type: float[5]
+    initial_value: '{0.0, 0.0, 0.0, 0.0, 0.0}'
 
 text_sensor:
   # The tracer/pv.yaml file has a lambda in the panel_voltage sensor
@@ -214,7 +213,7 @@ text_sensor:
     on_value:
       - if:
           condition:
-            lambda: 'return id(day_night_mode).state == "day";'
+            lambda: 'return x == "day";'
           then:
             - rtttl.play: 'alert:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
             - switch.turn_on: relay1
@@ -223,7 +222,7 @@ text_sensor:
             - switch.turn_off: relay1
       - if:
           condition:
-            lambda: 'return id(day_night_mode).state == "night";'
+            lambda: 'return x == "night";'
           then:
             - rtttl.play: 'alert:d=8,o=5,b=100:e,d,e,d,e,d,e,d'
             - switch.turn_on: relay3
@@ -232,3 +231,65 @@ text_sensor:
             - delay: 120s
             - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
             - switch.turn_off: relay2
+
+text:
+  - platform: template
+    name: "Configuration payload"
+    mode: text
+    entity_category: config
+    update_interval: 3600s
+    id: configuration_payload
+    set_action:
+      lambda: |-
+        JsonDocument root;
+        esphome::modbus_controller::ModbusController *controller = id(epever);
+
+        if (deserializeJson(root, x) != DeserializationError::Ok) {
+          ESP_LOGI("devconf", "bad JSON data payload");
+          return;
+        }
+
+        if (root["battery_type"]) {
+          int v = root["battery_type"];
+          esphome::modbus_controller::ModbusCommandItem write_command =
+              esphome::modbus_controller::ModbusCommandItem::create_write_single_command(
+                      controller, 0x9000, v);
+          epever->queue_command(write_command);
+          ESP_LOGI("devconf", "wrote battery_type %d", v);
+        }
+
+        return;
+    lambda: |-
+      JsonDocument root;
+      std::string x;
+
+      root["battery_type"] = id(battery_type).state;
+
+      serializeJson(root, x);
+      return x;
+
+  - platform: template
+    name: "Set RTC"
+    mode: text
+    entity_category: config
+    update_interval: 3600s
+    id: configuration_rtc
+    set_action:
+      lambda: |-
+        // input `x` = "1970-01-01 12:34:56"
+        int year, month, day, hour, minute, second;
+
+        year = std::stoi(x.substr(0, 4)) % 100;
+        month = std::stoi(x.substr(5, 2));
+        day = std::stoi(x.substr(8, 2));
+        hour = std::stoi(x.substr(11, 2));
+        minute = std::stoi(x.substr(14, 2));
+        second = std::stoi(x.substr(17, 2));
+
+        std::vector<uint16_t> rtc_data = {uint16_t((minute << 8) | second), uint16_t((day << 8) | hour),
+                                                uint16_t((year << 8) | month)};
+        esphome::modbus_controller::ModbusCommandItem set_rtc_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(epever, 0x9013, 3, rtc_data);
+        epever->queue_command(set_rtc_command);
+        ESP_LOGI("rtcconf", "RTC set to %04d-%02d-%02d %02d:%02d:%02d", year + 2000, month, day, hour, minute, second);
+    lambda: |-
+      return id(template_rtc).state;

@@ -6,6 +6,7 @@ sensor:
     address: 0x3300
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "V"
     filters:
@@ -19,6 +20,7 @@ sensor:
     register_type: read
     value_type: U_WORD
     accuracy_decimals: 1
+    skip_updates: 10
     unit_of_measurement: "V"
     filters:
       - multiply: 0.01
@@ -30,6 +32,7 @@ sensor:
     address: 0x3302
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "V"
     filters:
@@ -42,6 +45,7 @@ sensor:
     address: 0x3303
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "V"
     filters:
@@ -54,11 +58,14 @@ sensor:
     address: 0x3304
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 0
     unit_of_measurement: "Wh"
     device_class: "energy"
     filters:
       - multiply: 10.0
+
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -67,6 +74,7 @@ sensor:
     address: 0x3306
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 0
     unit_of_measurement: "Wh"
     device_class: "energy"
@@ -80,11 +88,14 @@ sensor:
     address: 0x3308
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "kWh"
     device_class: "energy"
     filters:
       - multiply: 0.01
+
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -93,6 +104,7 @@ sensor:
     address: 0x330A
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "kWh"
     device_class: "energy"
@@ -106,6 +118,7 @@ sensor:
     address: 0x330C
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 0
     unit_of_measurement: "Wh"
     on_value:
@@ -116,11 +129,7 @@ sensor:
     filters:
       - multiply: 10.0
 
-  - platform: template
-    accuracy_decimals: 0
-    name: "Generated Charge today"
-    id: generated_charge_today
-    unit_of_measurement: "Ah"
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -129,6 +138,7 @@ sensor:
     address: 0x330E
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 0
     unit_of_measurement: "Wh"
     device_class: "energy"
@@ -142,11 +152,14 @@ sensor:
     address: 0x3310
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "kWh"
     device_class: "energy"
     filters:
       - multiply: 0.01
+
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -155,6 +168,7 @@ sensor:
     address: 0x3312
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "kWh"
     device_class: "energy"
@@ -168,10 +182,13 @@ sensor:
     address: 0x3314
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "kg"
     filters:
       - multiply: 10.0
+
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -180,10 +197,13 @@ sensor:
     address: 0x331A
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 1
     unit_of_measurement: "V"
     filters:
       - multiply: 0.01
+
+    force_new_range: true
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -192,8 +212,18 @@ sensor:
     address: 0x331B
     register_type: read
     value_type: S_DWORD_R
+    skip_updates: 10
     register_count: 2
     accuracy_decimals: 2
     unit_of_measurement: "A"
     filters:
       - multiply: 0.01
+
+    force_new_range: true
+
+  - platform: template
+    accuracy_decimals: 0
+    name: "Generated Charge today"
+    id: generated_charge_today
+    unit_of_measurement: "Ah"
+

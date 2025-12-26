@@ -6,7 +6,7 @@ sensor:
     name: "Battery Type"
     register_type: holding
     value_type: U_WORD
-    skip_updates: 50
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -15,6 +15,7 @@ sensor:
     name: "Battery Capacity"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -24,6 +25,7 @@ sensor:
     unit_of_measurement: "mV/°C/2V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -35,6 +37,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -46,6 +49,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -57,6 +61,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -68,6 +73,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -79,6 +85,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -90,6 +97,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -101,6 +109,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -112,6 +121,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -123,6 +133,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -134,6 +145,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -145,6 +157,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -156,6 +169,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -167,8 +181,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
-    # new range add 'skip_updates' again
-    skip_updates: 50
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -180,6 +193,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -191,6 +205,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -202,6 +217,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -213,6 +229,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -224,6 +241,7 @@ sensor:
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -235,6 +253,7 @@ sensor:
     unit_of_measurement: "mOhm"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -246,6 +265,7 @@ sensor:
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -257,17 +277,19 @@ sensor:
     unit_of_measurement: "mins"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
-    id: nttv
+    id: light_time_threshold_voltage
     address: 0x9020
     name: "Light Time Threshold Voltage"
     unit_of_measurement: "mins"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -279,6 +301,7 @@ sensor:
     unit_of_measurement: "mins"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
     filters:
       - multiply: 0.01
 
@@ -295,7 +318,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
-    skip_updates: 50
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -307,6 +330,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -316,6 +340,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -325,7 +350,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
-    skip_updates: 50
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -335,6 +360,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -344,6 +370,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -353,6 +380,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -362,6 +390,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -371,6 +400,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -380,6 +410,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -389,6 +420,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -398,6 +430,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -407,6 +440,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -416,6 +450,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -425,6 +460,7 @@ sensor:
     register_type: holding
     accuracy_decimals: 0
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -435,6 +471,7 @@ sensor:
     accuracy_decimals: 0
     unit_of_measurement: "s"
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -446,6 +483,7 @@ sensor:
     name: "Length of night-mins"
     register_type: holding
     value_type: U_WORD
+    skip_updates: 10
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -456,6 +494,7 @@ sensor:
     name: "Length of night"
     register_type: holding
     value_type: U_WORD
-    skip_updates: 50
+    skip_updates: 10
     filters:
       - lambda: return id(length_of_night_minutes).state  + ( 60 * x);
+

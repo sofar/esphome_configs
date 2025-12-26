@@ -1,4 +1,11 @@
 sensor:
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: tracer_day_night
+    name: "Device night mode"
+    address: 0x200c
+    register_type: discrete_input
+    value_type: S_WORD
 
   - platform: modbus_controller
     modbus_controller_id: epever

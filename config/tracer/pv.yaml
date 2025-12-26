@@ -5,40 +5,11 @@ sensor:
     id: array_rated_voltage
     name: "array_rated_voltage"
     address: 0x3000
-    skip_updates: 60
+    skip_updates: 10
     unit_of_measurement: "V"
     register_type: read
     value_type: U_WORD
     accuracy_decimals: 1
-    lambda: |-
-      int i;
-      float sumpre, avgpre = 0.0;
-      float sumpost, avgpost = 0.0;
-      auto pv = id(pv_history);
-
-      // calc average before
-      for (i = 0; i < 7; i++)
-        sumpre += pv[i];
-      avgpre = sumpre / 8.0;
-
-      // insert new measurement
-      for (i = 1; i < 7; i++)
-        pv[i] = pv[i-1];
-      pv[7] = x;
-
-      // calc average after
-      for (i = 0; i < 7; i++)
-        sumpost += pv[i];
-      avgpost = sumpost / 8.0;
-
-      // publish changes to template sensor
-      if ((avgpre < 5.0) && (avgpost >= 5.0))
-        id(day_night_mode).publish_state("day");
-
-      if ((avgpre >= 5.0) && (avgpost < 5.0))
-        id(day_night_mode).publish_state("night");
-
-      return x;
     filters:
         - multiply: 0.01
 
@@ -50,6 +21,7 @@ sensor:
     unit_of_measurement: "A"
     register_type: read
     value_type: U_WORD
+    skip_updates: 10
     accuracy_decimals: 2
     filters:
         - multiply: 0.01
@@ -63,6 +35,7 @@ sensor:
     unit_of_measurement: "W"
     register_type: read
     value_type: U_DWORD_R
+    skip_updates: 10
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
@@ -78,6 +51,39 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
+    lambda: |-
+      int i;
+      float sumpre, avgpre = 0.0;
+      float sumpost, avgpost = 0.0;
+      auto pv = id(pv_history);
+
+      ESP_LOGI("pvhist", "PV History %.1f %.1f %.1f %.1f %.1f + %.1f",
+               pv[0], pv[1], pv[2], pv[3], pv[4], x / 100.0);
+
+      // calc average before
+      for (i = 0; i < 5; i++)
+        sumpre += pv[i];
+      avgpre = sumpre / 5.0;
+
+      // shift left measurements
+      for (i = 1; i < 5; i++)
+        pv[i - 1] = pv[i];
+      // insert new measurement
+      pv[4] = x / 100.0;
+
+      // calc average after
+      for (i = 0; i < 5; i++)
+        sumpost += pv[i];
+      avgpost = sumpost / 5.0;
+
+      // publish changes to template sensor
+      if ((avgpre < 5.0) && (avgpost >= 5.0))
+        id(day_night_mode).publish_state("day");
+
+      if ((avgpre >= 5.0) && (avgpost < 5.0))
+        id(day_night_mode).publish_state("night");
+
+      return x;
 
   - platform: modbus_controller
     modbus_controller_id: epever
