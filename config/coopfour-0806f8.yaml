@@ -231,6 +231,7 @@ text_sensor:
             - delay: 120s
             - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
             - switch.turn_off: relay2
+            - switch.turn_off: relay3
 
 text:
   - platform: template
