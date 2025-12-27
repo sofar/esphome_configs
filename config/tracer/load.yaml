@@ -5,6 +5,7 @@ switch:
     register_type: coil
     address: 2
     name: "manual control the load"
+    entity_category: config
     bitmask: 1
 
   - platform: modbus_controller
@@ -13,6 +14,7 @@ switch:
     register_type: coil
     address: 3
     name: "default control the load"
+    entity_category: config
     bitmask: 1
 
   - platform: modbus_controller
@@ -21,6 +23,7 @@ switch:
     register_type: coil
     address: 5
     name: "enable load test mode"
+    entity_category: config
     bitmask: 1
 
   - platform: modbus_controller
@@ -29,6 +32,7 @@ switch:
     register_type: coil
     address: 6
     name: "Force Load on/off"
+    entity_category: config
     bitmask: 1
 
 sensor:
