@@ -20,7 +20,8 @@ packages:
   tracer-bat: !include tracer/bat.yaml
   tracer-pv: !include tracer/pv.yaml
   tracer-stats: !include tracer/stats.yaml
-  tracer-settings: !include tracer/settings.yaml
+  tracer-settings-bat: !include tracer/settings-bat.yaml
+  tracer-settings-load: !include tracer/settings-load.yaml
   tracer-rtc: !include tracer/rtc.yaml
 
 binary_sensor:
@@ -194,45 +195,6 @@ light:
     num_leds: 1
     chipset: WS2812
 
-globals:
-  - id: pv_history
-    type: float[5]
-    initial_value: '{0.0, 0.0, 0.0, 0.0, 0.0}'
-
-text_sensor:
-  # The tracer/pv.yaml file has a lambda in the panel_voltage sensor
-  # that publishes to this template sensor, and keeps the above pv_history
-  # array updated with values. This template text_sensor then translates
-  # changes in it to open/close events.
-  # because the initial state will be unknown, after a fresh boot this will
-  # automatically run the open or close sequence a few minutes after being
-  # powered on.
-  - platform: template
-    name: "Day/Night"
-    id: day_night_mode
-    on_value:
-      - if:
-          condition:
-            lambda: 'return x == "day";'
-          then:
-            - rtttl.play: 'alert:d=8,o=5,b=100:d,e,d,e,d,e,d,e'
-            - switch.turn_on: relay1
-            - delay: 120s
-            - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
-            - switch.turn_off: relay1
-      - if:
-          condition:
-            lambda: 'return x == "night";'
-          then:
-            - rtttl.play: 'alert:d=8,o=5,b=100:e,d,e,d,e,d,e,d'
-            - switch.turn_on: relay3
-            - delay: 600s
-            - switch.turn_on: relay2
-            - delay: 120s
-            - rtttl.play: 'complete:d=8,o=6,b=100:e,d'
-            - switch.turn_off: relay2
-            - switch.turn_off: relay3
-
 text:
   - platform: template
     name: "Configuration payload"
@@ -297,3 +259,43 @@ text:
         ESP_LOGI("rtcconf", "RTC set to %04d-%02d-%02d %02d:%02d:%02d", year + 2000, month, day, hour, minute, second);
     lambda: |-
       return id(template_rtc).state;
+
+# time based automation
+time:
+  # I really don't like to have to use this, I'd much rather use the modbus RTC
+  # at boot time, and then possibly later sync the RTC to hass/sntp
+  - platform: sntp
+    id: sntp_time
+    timezone: America/Los_Angeles
+    servers:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+      - 2.pool.ntp.org
+
+sun:
+  latitude: 45.649828°
+  longitude: -123.218886°
+
+  on_sunrise:
+    - elevation: 0°
+      then:
+        - logger.log: 'Opening door'
+        - switch.turn_on: relay1
+
+  on_sunset:
+    - elevation: 1°
+      # about 12 minutes before sunset
+      then:
+        - logger.log: 'Turning on light'
+        - switch.turn_on: relay3
+    - elevation: -1°
+      # about 2 minutes after sunset
+      then:
+        - logger.log: 'Closing door'
+        - switch.turn_on: relay2
+    - elevation: -3°
+      # about 13 minutes after closing door
+      then:
+        - logger.log: 'Turning off light'
+        - switch.turn_off: relay3
+

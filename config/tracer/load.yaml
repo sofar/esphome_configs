@@ -36,6 +36,7 @@ sensor:
     modbus_controller_id: epever
     id: rated_current_of_load
     name: "rated_current_of_load"
+    entity_category: diagnostic
     address: 0x300E
     skip_updates: 10
     unit_of_measurement: "A"

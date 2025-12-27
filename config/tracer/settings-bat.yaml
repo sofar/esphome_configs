@@ -4,6 +4,7 @@ sensor:
     id: battery_type
     address: 0x9000
     name: "Battery Type"
+    entity_category: diagnostic
     register_type: holding
     value_type: U_WORD
     skip_updates: 10
@@ -13,6 +14,7 @@ sensor:
     id: battery_capacity
     address: 0x9001
     name: "Battery Capacity"
+    entity_category: diagnostic
     register_type: holding
     value_type: U_WORD
     skip_updates: 10
@@ -22,6 +24,7 @@ sensor:
     id: temperature_compensation_coefficient
     address: 0x9002
     name: "Temperature compensation coefficient"
+    entity_category: diagnostic
     unit_of_measurement: "mV/°C/2V"
     register_type: holding
     value_type: U_WORD
@@ -34,6 +37,7 @@ sensor:
     id: high_voltage_disconnect
     address: 0x9003
     name: "High Voltage disconnect"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -46,6 +50,7 @@ sensor:
     id: charging_limit_voltage
     address: 0x9004
     name: "Charging limit voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -58,6 +63,7 @@ sensor:
     id: over_voltage_reconnect
     address: 0x9005
     name: "Over voltage reconnect"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -70,6 +76,7 @@ sensor:
     id: equalization_voltage
     address: 0x9006
     name: "Equalization voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -82,6 +89,7 @@ sensor:
     id: boost_voltage
     address: 0x9007
     name: "Boost voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -94,6 +102,7 @@ sensor:
     id: float_voltage
     address: 0x9008
     name: "Float voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -106,6 +115,7 @@ sensor:
     id: boost_reconnect_voltage
     address: 0x9009
     name: "Boost reconnect voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -118,6 +128,7 @@ sensor:
     id: low_voltage_reconnect
     address: 0x900A
     name: "Low voltage reconnect"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -130,6 +141,7 @@ sensor:
     id: under_voltage_recover
     address: 0x900B
     name: "Under voltage recover"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -142,6 +154,7 @@ sensor:
     id: under_voltage_warning
     address: 0x900C
     name: "Under voltage warning"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -154,6 +167,7 @@ sensor:
     id: low_voltage_disconnect
     address: 0x900D
     name: "Low voltage disconnect"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -166,6 +180,7 @@ sensor:
     id: discharging_limit_voltage
     address: 0x900E
     name: "Discharging limit voltage"
+    entity_category: diagnostic
     unit_of_measurement: "V"
     register_type: holding
     value_type: U_WORD
@@ -178,6 +193,7 @@ sensor:
     id: battery_temperature_warning_upper_limit
     address: 0x9017
     name: "Battery temperature warning upper limit"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -190,6 +206,7 @@ sensor:
     id: battery_temperature_warning_lower_limit
     address: 0x9018
     name: "Battery temperature warning lower limit"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -202,6 +219,7 @@ sensor:
     id: controller_inner_temperature_upper_limit
     address: 0x9019
     name: "Controller inner temperature upper limit"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -214,6 +232,7 @@ sensor:
     id: controller_inner_temperature_upper_limit_recover
     address: 0x901A
     name: "Controller inner temperature upper limit recover"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -226,6 +245,7 @@ sensor:
     id: power_component_temperature_upper_limit
     address: 0x901B
     name: "Power component temperature upper limit"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -238,6 +258,7 @@ sensor:
     id: power_component_temperature_upper_limit_recover
     address: 0x901C
     name: "Power component temperature upper limit recover"
+    entity_category: diagnostic
     unit_of_measurement: "°C"
     register_type: holding
     value_type: S_WORD
@@ -250,251 +271,11 @@ sensor:
     id: line_impedance
     address: 0x901D
     name: "Line Impedance"
+    entity_category: diagnostic
     unit_of_measurement: "mOhm"
     register_type: holding
     value_type: U_WORD
     skip_updates: 10
     filters:
       - multiply: 0.01
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: dttv
-    address: 0x901E
-    name: "Day Time Threshold Voltage"
-    unit_of_measurement: "V"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-    filters:
-      - multiply: 0.01
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: light_signal_startup_delay_time
-    address: 0x901F
-    name: "Light signal startup delay time"
-    unit_of_measurement: "mins"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-    filters:
-      - multiply: 0.01
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: light_time_threshold_voltage
-    address: 0x9020
-    name: "Light Time Threshold Voltage"
-    unit_of_measurement: "mins"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-    filters:
-      - multiply: 0.01
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: light_signal_close_delay_time
-    address: 0x9021
-    name: "Light signal close delay time"
-    unit_of_measurement: "mins"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-    filters:
-      - multiply: 0.01
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id:
-      load_controlling_modes
-      # 0000H Manual Control
-      # 0001H Light ON/OFF
-      # 0002H Light ON+ Timer/
-      # 0003H Time Control
-    address: 0x903D
-    name: "Load controlling modes"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: working_time_length_1
-    # The length of load output timer1,
-    # D15-D8,hour, D7-D0, minute
-    address: 0x903E
-    name: "Working_time length 1"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: working_time_length_2
-    address: 0x903F
-    name: "Working_time length 2"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_1_seconds
-    address: 0x9042
-    name: "Turn on timing 1 seconds"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_1_minutes
-    address: 0x9043
-    name: "Turn on timing 1 minutes"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_1_hours
-    address: 0x9044
-    name: "Turn on timing 1 hours"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_1_seconds
-    address: 0x9045
-    name: "Turn off timing 1 seconds"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_1_minutes
-    address: 0x9046
-    name: "Turn off timing 1 minutes"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_1_hours
-    address: 0x9047
-    name: "Turn off timing 1 hours"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_2_seconds
-    address: 0x9048
-    name: "Turn on timing 2 seconds"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_2_minutes
-    address: 0x9049
-    name: "Turn on timing 2 minutes"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_on_timing_2_hours
-    address: 0x904A
-    name: "Turn on timing 2 hours"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_2_seconds
-    address: 0x904B
-    name: "Turn off timing 2 seconds"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_2_minutes
-    address: 0x904C
-    name: "Turn off timing 2 minutes"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: turn_off_timing_2_hours
-    address: 0x904D
-    name: "Turn off timing 2 hours"
-    register_type: holding
-    accuracy_decimals: 0
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: backlight_time
-    address: 0x9063
-    name: "Backlight time"
-    register_type: holding
-    accuracy_decimals: 0
-    unit_of_measurement: "s"
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: length_of_night_minutes
-    address: 0x9065
-    internal: true
-    bitmask: 0xFF
-    unit_of_measurement: "m"
-    name: "Length of night-mins"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: length_of_night
-    address: 0x9065
-    bitmask: 0xFF00
-    unit_of_measurement: "m"
-    name: "Length of night"
-    register_type: holding
-    value_type: U_WORD
-    skip_updates: 10
-    filters:
-      - lambda: return id(length_of_night_minutes).state  + ( 60 * x);
 

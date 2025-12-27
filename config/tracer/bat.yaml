@@ -3,6 +3,7 @@ sensor:
     modbus_controller_id: epever
     id: battery_rated_voltage
     name: "battery_rated_voltage"
+    entity_category: diagnostic
     address: 0x3004
     unit_of_measurement: "V"
     register_type: read
@@ -16,6 +17,7 @@ sensor:
     modbus_controller_id: epever
     id: battery_rated_current
     name: "battery_rated_current"
+    entity_category: diagnostic
     address: 0x3005
     unit_of_measurement: "A"
     register_type: read
@@ -29,6 +31,7 @@ sensor:
     modbus_controller_id: epever
     id: battery_rated_power
     name: "battery_rated_power"
+    entity_category: diagnostic
     address: 0x3006
     unit_of_measurement: "W"
     register_type: read
@@ -47,7 +50,6 @@ sensor:
     register_type: read
     value_type: U_WORD
     accuracy_decimals: 0
-
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -110,31 +112,3 @@ sensor:
     filters:
       - multiply: 0.01
 
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: battery_status_volt
-    name: "Battery status - Voltage"
-    address: 0x3200
-    register_type: read
-    value_type: U_WORD
-    bitmask: 7  #(Bits 0-3)
-    accuracy_decimals: 0
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: battery_status_temp
-    name: "Battery status - Temperature"
-    address: 0x3200
-    register_type: read
-    value_type: U_WORD
-    bitmask: 0x38  #(Bits 4-7)
-    accuracy_decimals: 0
-
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: Charger_status
-    name: "Charger status"
-    address: 0x3201
-    register_type: read
-    value_type: U_WORD
-    accuracy_decimals: 0
