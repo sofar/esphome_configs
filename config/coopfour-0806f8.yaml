@@ -250,6 +250,9 @@ text:
           return;
         }
 
+        //FIXME - this is kinda bad. We should instead just be able to consume
+        //        an entire battery setup payload all at once.
+
         if (root["battery_type"]) {
           int v = root["battery_type"];
           esphome::modbus_controller::ModbusCommandItem write_command =
