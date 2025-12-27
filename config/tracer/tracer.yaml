@@ -4,10 +4,9 @@ sensor:
     id: device_day_night
     name: "Device night mode"
     address: 0x200c
-    # The ESPHOME modbus `discrete_input` is expecting 2
-    # bytes of data, but modbus spec clearly indicates
-    # if we read 1 readonly coil we should get 1 byte back.
-    custom_command: [0x01, 0x02, 0x20, 0x0C, 0x00, 0x01]
+    register_type: discrete_input
+    response_size: 1
+    register_count: 1
     lambda: |-
       return data[0];
 
@@ -70,19 +69,19 @@ text_sensor:
       uint16_t v = modbus_controller::word_from_hex_str(x, 0);
       std::string s;
 
-      if (v & 0xf == 0)
+      if ((v & 0xf) == 0)
         s += "Normal, ";
-      if (v & 0xf == 1)
+      if ((v & 0xf) == 1)
         s += "Over voltage, ";
-      if (v & 0xf == 2)
+      if ((v & 0xf) == 2)
         s += "Under voltage, ";
-      if (v & 0xf == 3)
+      if ((v & 0xf) == 3)
         s += "Over discharge, ";
-      if (v & 0xf == 4)
+      if ((v & 0xf) == 4)
         s += "Fault, ";
-      if (v & 0xf0 == 0x10)
+      if ((v & 0xf0) == 0x10)
         s += "Over temperature, ";
-      if (v & 0xf0 == 0x20)
+      if ((v & 0xf0) == 0x20)
         s += "Under temperature, ";
       if (v & 0x0100)
         s += "Battery resistance abnormal, ";
@@ -107,19 +106,19 @@ text_sensor:
       uint16_t v = modbus_controller::word_from_hex_str(x, 0);
       std::string s;
 
-      if (v & 0x1 == 0)
+      if ((v & 0x1) == 0)
         s += "Standby, ";
-      if (v & 0x1 == 1)
+      if ((v & 0x1) == 1)
         s += "Running, ";
       if (v & 0x2)
         s += "Fault, ";
-      if (v & 0xc == 0)
+      if ((v & 0xc) == 0)
         s += "Not charging, ";
-      if (v & 0xc == 8)
+      if ((v & 0xc) == 8)
         s += "Float charging, ";
-      if (v & 0xc == 0xa)
+      if ((v & 0xc) == 0xa)
         s += "Boost charging, ";
-      if (v & 0xc == 0xc)
+      if ((v & 0xc) == 0xc)
         s += "Equalizing, ";
       if (v & 0x10)
         s += "PV input is short circuit, ";
@@ -139,11 +138,11 @@ text_sensor:
         s += "Charging or Anti-reverse MOSFET is open circuit, ";
       if (v & 0x2000)
         s += "Charging MOSFET is short circuit, ";
-      if (v & 0xc000 == 0x4000)
+      if ((v & 0xc000) == 0x4000)
         s += "No input power connected, ";
-      if (v & 0xc000 == 0x8000)
+      if ((v & 0xc000) == 0x8000)
         s += "Higher input voltage, ";
-      if (v & 0xc000 == 0xc000)
+      if ((v & 0xc000) == 0xc000)
         s += "Input voltage error, ";
 
       // trim trailing ", "
@@ -164,9 +163,9 @@ text_sensor:
       uint16_t v = modbus_controller::word_from_hex_str(x, 0);
       std::string s;
 
-      if (v & 0x1 == 0)
+      if ((v & 0x1) == 0)
         s += "Standby, ";
-      if (v & 0x1 == 1)
+      if ((v & 0x1) == 1)
         s += "Running, ";
       if (v & 0x2)
         s += "Fault, ";
@@ -186,21 +185,21 @@ text_sensor:
         s += "Unable to discharge, ";
       if (v & 0x800)
         s += "Short circuit, ";
-      if (v & 0x3000 == 0)
+      if ((v & 0x3000) == 0)
         s += "Light load, ";
-      if (v & 0x3000 == 0x1000)
+      if ((v & 0x3000) == 0x1000)
         s += "Moderate load, ";
-      if (v & 0x3000 == 0x2000)
+      if ((v & 0x3000) == 0x2000)
         s += "Rated load, ";
-      if (v & 0x3000 == 0x3000)
+      if ((v & 0x3000) == 0x3000)
         s += "Overload, ";
-      if (v & 0xc000 == 0)
+      if ((v & 0xc000) == 0)
         s += "Input voltage normal, ";
-      if (v & 0xc000 == 0x4000)
+      if ((v & 0xc000) == 0x4000)
         s += "Input voltage low, ";
-      if (v & 0xc000 == 0x8000)
+      if ((v & 0xc000) == 0x8000)
         s += "Input voltage high, ";
-      if (v & 0xc000 == 0xc000)
+      if ((v & 0xc000) == 0xc000)
         s += "No access, ";
 
       // trim trailing ", "

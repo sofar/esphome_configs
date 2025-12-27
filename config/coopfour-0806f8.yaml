@@ -15,13 +15,21 @@ packages:
   standard-basic-control: !include standard/basic.yaml
   standard-wifi: !include standard/wifi.yaml
 
+  # basic equipment status
   tracer-tracer: !include tracer/tracer.yaml
+  # load data
   tracer-load: !include tracer/load.yaml
+  # battery data
   tracer-bat: !include tracer/bat.yaml
+  # panel data
   tracer-pv: !include tracer/pv.yaml
+  # statistics
   tracer-stats: !include tracer/stats.yaml
+  # battery configurations
   tracer-settings-bat: !include tracer/settings-bat.yaml
+  # load toggle on/off
   tracer-settings-load: !include tracer/settings-load.yaml
+  # reads the RTC.
   tracer-rtc: !include tracer/rtc.yaml
 
 binary_sensor:
