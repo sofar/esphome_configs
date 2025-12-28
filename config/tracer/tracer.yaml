@@ -1,15 +1,12 @@
-sensor:
+binary_sensor:
   - platform: modbus_controller
     modbus_controller_id: epever
     id: device_day_night
     name: "Device night mode"
     address: 0x200c
     register_type: discrete_input
-    response_size: 1
-    register_count: 1
-    lambda: |-
-      return data[0];
 
+sensor:
   - platform: modbus_controller
     modbus_controller_id: epever
     id: device_temperature
