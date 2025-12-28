@@ -296,13 +296,13 @@ sun:
       then:
         - logger.log: 'Turning on light'
         - switch.turn_on: relay3
-    - elevation: -1°
-      # about 2 minutes after sunset
+    - elevation: -3°
+      # about 20 minutes after sunset
       then:
         - logger.log: 'Closing door'
         - switch.turn_on: relay2
-    - elevation: -3°
-      # about 13 minutes after closing door
+    - elevation: -4°
+      # about 25 minutes after closing door
       then:
         - logger.log: 'Turning off light'
         - switch.turn_off: relay3
