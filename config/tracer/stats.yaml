@@ -175,6 +175,8 @@ sensor:
     filters:
       - multiply: 0.01
 
+    # this sensor always produces an error 0x02 - I'm guessing this
+    # isn't implemented as a valid register in all devices
   - platform: modbus_controller
     modbus_controller_id: epever
     id: co2_reduction
