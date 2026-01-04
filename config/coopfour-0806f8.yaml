@@ -57,6 +57,14 @@ binary_sensor:
     filters:
       - delayed_on: 10ms
     # no action - purely informational
+    on_press:
+      - cover.template.publish:
+          id: coopdoor
+          position: 1.0
+    on_release:
+      - cover.template.publish:
+          id: coopdoor
+          position: 0.85
 
   - platform: gpio
     pin:
@@ -69,6 +77,14 @@ binary_sensor:
     filters:
       - delayed_on: 10ms
     # no action - purely informational
+    on_press:
+      - cover.template.publish:
+          id: coopdoor
+          position: 0.0
+    on_release:
+      - cover.template.publish:
+          id: coopdoor
+          position: 0.15
 
   - platform: gpio
     pin:
@@ -306,4 +322,17 @@ sun:
       then:
         - logger.log: 'Turning off light'
         - switch.turn_off: relay3
+
+cover:
+  - platform: template
+    name: "Coop door"
+    id: coopdoor
+    has_position: true
+    open_action:
+      - switch.turn_on: relay1
+    close_action:
+      - switch.turn_on: relay2
+    stop_action:
+      - switch.turn_off: relay1
+      - switch.turn_off: relay2
 
