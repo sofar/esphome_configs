@@ -109,8 +109,6 @@ select:
     id: charging_mode
     name: "Charging controller type"
     address: 0x3008
-    unit_of_measurement: ""
-    register_type: read
     value_type: U_WORD
     optionsmap:
       "Connect/disconnect": 0
